@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: 220 20% 97%;
+  --foreground: 220 25% 8%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 25% 8%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 25% 8%;
+  --primary: 75 100% 45%;
+  --primary-foreground: 220 25% 8%;
+  --secondary: 174 85% 40%;
+  --secondary-foreground: 220 25% 8%;
+  --muted: 220 15% 92%;
+  --muted-foreground: 220 12% 50%;
+  --accent: 220 15% 92%;
+  --accent-foreground: 220 25% 8%;
+  --destructive: 350 80% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 15% 88%;
+  --input: 220 15% 88%;
+  --ring: 75 100% 45%;
+  --radius: 0.625rem;
+}
+
+.dark {
+  --background: 220 25% 6%;
+  --foreground: 210 20% 95%;
+  --card: 220 22% 10%;
+  --card-foreground: 210 20% 95%;
+  --popover: 220 22% 10%;
+  --popover-foreground: 210 20% 95%;
+  --primary: 75 100% 55%;
+  --primary-foreground: 220 25% 8%;
+  --secondary: 174 85% 50%;
+  --secondary-foreground: 220 25% 8%;
+  --muted: 220 20% 15%;
+  --muted-foreground: 220 12% 60%;
+  --accent: 220 20% 15%;
+  --accent-foreground: 210 20% 95%;
+  --destructive: 350 80% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 18% 18%;
+  --input: 220 18% 18%;
+  --ring: 75 100% 55%;
+}
+
+*, *::before, *::after { box-sizing: border-box; border-color: hsl(var(--border)); }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1,h2,h3,h4,h5,h6 { font-family: 'Barlow Condensed', sans-serif; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(90deg, hsl(220 20% 13%) 25%, hsl(220 20% 18%) 50%, hsl(220 20% 13%) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(220 18% 25%); border-radius: 99px; }
