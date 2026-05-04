@@ -26,6 +26,25 @@ export const metadata: Metadata = {
   },
   description: "Bangladesh's premier sports club management platform.",
   keywords: ["SportPulse", "Bangladesh", "Sports Club", "Fitness", "Coaching"],
+
+
+  icons: {
+  icon: [
+    {
+      url: "https://res.cloudinary.com/djk8khbrv/image/upload/v1777822521/fitness-sport-gym-logo-design-vector_m0sttp.png",
+      type: "image/png",
+      sizes: "32x32",
+    },
+  ],
+  apple: [
+    {
+      url: "https://res.cloudinary.com/djk8khbrv/image/upload/v1777822521/fitness-sport-gym-logo-design-vector_m0sttp.png",
+      sizes: "180x180",
+      type: "image/png",
+    },
+  ],
+  shortcut: "https://res.cloudinary.com/djk8khbrv/image/upload/v1777822521/fitness-sport-gym-logo-design-vector_m0sttp.png",
+}
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

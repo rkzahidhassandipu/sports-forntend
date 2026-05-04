@@ -29,12 +29,11 @@ export default function ManageSessionsPage() {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
   const isAdmin = true; // Replace with actual role check from auth context
-
-  const fetchSessions = async () => {
+const fetchSessions = async () => {
   try {
     setLoading(true);
-    const sessions = await SessionService.getAll();
-    setSessions(sessions); // already Session[]
+    const result = await SessionService.getAll({ page: 1, limit: 100 });
+    setSessions(result.sessions ?? []);  // ✅ unwrap .sessions
   } catch (error) {
     toast.error("Failed to load sessions");
     setSessions([]);

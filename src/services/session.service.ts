@@ -1,6 +1,6 @@
 import { api } from "@/lib/api";
 import { ApiResponse } from "@/types";
-import { CreateSessionDto, Review, Session, SessionFilters, UpdateSessionDto } from "@/types/gym";
+import { CreateSessionDto, PaginatedSessions, Review, Session, SessionFilters, UpdateSessionDto } from "@/types/gym";
 
 
 const SessionService = {
@@ -9,10 +9,16 @@ const SessionService = {
    */
  // src/services/session.service.ts
 
-async getAll(params?: SessionFilters): Promise<Session[]> {
-  const response = await api.get<ApiResponse<Session[]>>('/sessions', { params });
-  return response.data.data; // unwrap once here
-},
+ async getAll(params?: SessionFilters): Promise<PaginatedSessions> {
+    const response = await api.get<ApiResponse<Session[]>>("/sessions", {
+      params,
+    });
+ 
+    return {
+      sessions: response.data.data ?? [],   // the array
+      meta:     (response.data as any).meta, // pagination meta
+    };
+  },
 
   async search(query: string): Promise<Session[]> {
     const { data } = await api.get('/sessions/search', { params: { q: query } });

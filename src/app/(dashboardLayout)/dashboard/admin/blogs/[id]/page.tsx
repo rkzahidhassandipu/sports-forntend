@@ -10,73 +10,67 @@ import { Loader2, ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
-// ─── Route: /dashboard/admin/blogs/[id] ───────────────────────────────────────
-// Folder name must be [id] — not [slug]
+const INPUT_CLS =
+  "w-full bg-card text-card-foreground placeholder:text-muted-foreground border border-border rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition-all";
+
+const LABEL_CLS = "text-[10px] font-black uppercase tracking-widest text-muted-foreground";
 
 export default function BlogEditPage() {
-  const params = useParams();
-  const router = useRouter();
+  const params      = useParams();
+  const router      = useRouter();
   const queryClient = useQueryClient();
 
-  // Folder is [id] so params.id gives the post ID
   const id = params.id as string;
 
-  // Fetch post by ID
   const { data: response, isLoading } = useQuery({
     queryKey: ["blog", id],
-    queryFn: () => BlogService.getPost(id),
-    enabled: !!id,
+    queryFn:  () => BlogService.getPost(id),
+    enabled:  !!id,
   });
 
   const post = response?.data;
 
   const { register, handleSubmit, reset } = useForm<UpdateBlogDto>();
 
-  // Populate form once data arrives
   useEffect(() => {
-  if (post) {
-    reset({
-      title: post.title,
-      content: post.content,
-      excerpt: post.excerpt ?? undefined,
-      coverImage: post.coverImage ?? undefined,
-      tags: post.tags,
-      published: post.published,
-    });
-  }
-}, [post, reset]);
+    if (post) {
+      reset({
+        title:      post.title,
+        content:    post.content,
+        excerpt:    post.excerpt     ?? undefined,
+        coverImage: post.coverImage  ?? undefined,
+        tags:       post.tags,
+        published:  post.published,
+      });
+    }
+  }, [post, reset]);
 
   const updateMutation = useMutation({
-  mutationFn: (payload: UpdateBlogDto) => BlogService.updatePost(post!.id, payload),
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["blog", id] });
-
-    toast.success("Manuscript updated successfully!");
-    router.push("/dashboard/admin/blogs");
-  },
-  onError: () => toast.error("Failed to update manuscript."),
-});
-
-  const onSubmit = (formData: UpdateBlogDto) => {
-    updateMutation.mutate(formData);
-  };
+    mutationFn: (payload: UpdateBlogDto) => BlogService.updatePost(post!.id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blog", id] });
+      toast.success("Manuscript updated successfully!");
+      router.push("/dashboard/admin/blogs");
+    },
+    onError: () => toast.error("Failed to update manuscript."),
+  });
 
   // ── Loading ─────────────────────────────────────────────────────────────────
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="animate-spin text-lime-600" size={40} />
+        <Loader2 className="animate-spin text-primary" size={40} />
       </div>
     );
   }
 
   if (!post) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] gap-4 text-[#7a9c6e]">
+      <div className="flex flex-col items-center justify-center min-h-[400px] gap-4 text-muted-foreground">
         <p className="font-bold text-sm uppercase tracking-widest">Post not found.</p>
         <Link
           href="/dashboard/admin/blogs"
-          className="text-[10px] font-black text-lime-600 uppercase tracking-widest hover:underline"
+          className="text-[10px] font-black text-primary uppercase tracking-widest hover:underline"
         >
           ← Back to Archives
         </Link>
@@ -86,82 +80,78 @@ export default function BlogEditPage() {
 
   // ── Form ────────────────────────────────────────────────────────────────────
   return (
-    <div className="max-w-4xl mx-auto p-6 lg:p-10">
+    <div className="max-w-4xl mx-auto p-6 lg:p-10 bg-background min-h-screen">
+
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <Link
           href="/dashboard/admin/blogs"
-          className="flex items-center gap-2 text-[#7a9c6e] hover:text-slate-900 transition-colors font-bold text-sm uppercase tracking-widest"
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-bold text-sm uppercase tracking-widest"
         >
           <ArrowLeft size={16} /> Back to Archives
         </Link>
-        <h1 className="text-2xl font-black text-slate-900 uppercase italic">
-          Edit Manuscript
+        <h1 className="text-2xl font-black text-foreground uppercase italic">
+          Edit <span className="text-primary">Manuscript</span>
         </h1>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="bg-[#162513] p-8 rounded-[2rem] border border-slate-200 shadow-sm space-y-6">
+      <form onSubmit={handleSubmit((data) => updateMutation.mutate(data))} className="space-y-6">
+        <div className="bg-card border border-border p-8 rounded-[2rem] shadow-sm space-y-6">
 
           {/* Title */}
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-[#7a9c6e]">
-              Title
-            </label>
+            <label className={LABEL_CLS}>Title</label>
             <input
               {...register("title", { required: true })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#9AD872] font-bold"
+              className={`${INPUT_CLS} font-bold`}
+              placeholder="Post title..."
             />
           </div>
 
           {/* Excerpt */}
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-[#7a9c6e]">
-              Excerpt
-            </label>
+            <label className={LABEL_CLS}>Excerpt</label>
             <textarea
               {...register("excerpt")}
               rows={2}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#9AD872] text-sm resize-none"
+              placeholder="Short summary..."
+              className={`${INPUT_CLS} resize-none`}
             />
           </div>
 
           {/* Content */}
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-[#7a9c6e]">
-              Content
-            </label>
+            <label className={LABEL_CLS}>Content</label>
             <textarea
               {...register("content")}
-              rows={10}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#9AD872] text-sm leading-relaxed resize-none"
+              rows={12}
+              placeholder="Write your content here..."
+              className={`${INPUT_CLS} resize-none leading-relaxed`}
             />
           </div>
 
-          {/* Cover Image */}
+          {/* Cover Image URL */}
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-[#7a9c6e]">
-              Cover Image URL
-            </label>
+            <label className={LABEL_CLS}>Cover Image URL</label>
             <input
               {...register("coverImage")}
               placeholder="https://..."
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#9AD872] text-sm"
+              className={INPUT_CLS}
             />
           </div>
 
           {/* Published Toggle */}
-          <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+          <div className="flex items-center justify-between p-4 bg-muted rounded-2xl border border-border">
             <div>
-              <p className="text-sm font-bold text-slate-700">Visibility Status</p>
-              <p className="text-[10px] text-[#7a9c6e] uppercase font-bold tracking-tighter">
+              <p className="text-sm font-bold text-foreground">Visibility Status</p>
+              <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">
                 Toggle between draft and live
               </p>
             </div>
             <input
               type="checkbox"
               {...register("published")}
-              className="w-6 h-6 accent-lime-500 cursor-pointer"
+              className="w-6 h-6 accent-primary cursor-pointer"
             />
           </div>
         </div>
@@ -170,7 +160,7 @@ export default function BlogEditPage() {
         <button
           type="submit"
           disabled={updateMutation.isPending}
-          className="w-full h-14 bg-[#162513] text-[#f0f7ec] rounded-2xl font-black uppercase tracking-widest hover:bg-[#9AD872] transition-all flex items-center justify-center gap-2 shadow-xl disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full h-14 bg-primary text-primary-foreground rounded-2xl font-black uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-xl disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {updateMutation.isPending ? (
             <Loader2 className="animate-spin" size={20} />

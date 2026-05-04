@@ -79,11 +79,28 @@ export interface CreateSessionDto {
 export type UpdateSessionDto = Partial<CreateSessionDto>;
 
 export interface SessionFilters {
-  page?: number;
-  limit?: number;
+  page?:     number;
+  limit?:    number;
+  search?:   string;   // ← add
   category?: string;
-  level?: string;
-  coachId?: string;
-  status?: SessionStatus;
-  date?: string;
+  level?:    string;
+  coachId?:  string;
+  status?:   SessionStatus;
+  date?:     string;
+  sortBy?:   string;   // ← add
+}
+
+
+export interface PaginatedMeta {
+  page:       number;
+  limit:      number;
+  total:      number;
+  totalPages: number;
+  hasNext:    boolean;
+  hasPrev:    boolean;
+}
+
+export interface PaginatedSessions {
+  sessions: Session[];
+  meta:     PaginatedMeta;
 }
