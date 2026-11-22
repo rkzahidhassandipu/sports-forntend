@@ -173,7 +173,7 @@ function Pagination({
 }) {
   if (totalPages <= 1) return null;
 
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const pages = Array.from({ length: totalPages - 1 }, (_, i) => i + 1);
 
   return (
     <div className="flex items-center justify-center gap-2 mt-12">
@@ -209,7 +209,6 @@ function Pagination({
     </div>
   );
 }
-
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function BlogPage() {
